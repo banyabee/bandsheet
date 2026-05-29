@@ -5,14 +5,21 @@
     <title>D&D 캐릭터 시트</title>
     <style>
         body { background-color: #1a1a1a; color: #e0e0e0; font-family: sans-serif; padding: 20px; }
-        
         .save-btn { position: absolute; top: 20px; right: 20px; background: transparent; color: #cc3333; border: 1px solid #cc3333; padding: 5px 10px; cursor: pointer; border-radius: 3px; }
         .save-btn:hover { background: #cc3333; color: white; }
-
-        .sheet-grid { display: grid; grid-template-columns: 300px 1fr; gap: 20px; max-width: 1000px; margin: auto; margin-top: 40px; }
-        .box { border: 1px solid #7a0000; background: #252525; padding: 15px; border-radius: 4px; }
         
-        /* 기술 표 스타일 */
+        /* 레이아웃 구조 */
+        .sheet-grid { display: grid; grid-template-columns: 300px 1fr; gap: 20px; max-width: 1000px; margin: auto; margin-top: 40px; }
+        .box { border: 1px solid #7a0000; background: #252525; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        
+        /* 능력치(위쪽) 스타일 */
+        .stats-row { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 20px; }
+        .stat-container { display: flex; flex-direction: column; align-items: center; gap: 5px; flex: 1; }
+        .label { color: #cc3333; font-size: 0.8em; text-transform: uppercase; font-weight: bold; }
+        .stat-input { background: #1a1a1a; color: #ffffff; border: 1px solid #7a0000; width: 80%; text-align: center; font-size: 1.5em; font-weight: bold; padding: 5px; border-radius: 4px; }
+        .stat-modifier { font-size: 1.2em; color: #ffffff; margin-top: 5px; }
+
+        /* 기술(왼쪽) 스타일 */
         .skill-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.9em; }
         .prof-dot { width: 10px; height: 10px; border: 1px solid #cc3333; border-radius: 50%; cursor: pointer; }
         .prof-dot.active { background: #cc3333; }
@@ -28,29 +35,32 @@
     <div class="sheet-grid">
         <div class="box">
             <div id="skills-container">
-                <div class="skill-row"><div class="prof-dot" onclick="this.classList.toggle('active')"></div><span class="skill-mod">민첩</span><span class="skill-name">곡예 (Acrobatics)</span><span class="skill-bonus">+3</span></div>
-                <div class="skill-row"><div class="prof-dot" onclick="this.classList.toggle('active')"></div><span class="skill-mod">지혜</span><span class="skill-name">동물 조련 (Animal Handling)</span><span class="skill-bonus">+0</span></div>
-                <div class="skill-row"><div class="prof-dot" onclick="this.classList.toggle('active')"></div><span class="skill-mod">지능</span><span class="skill-name">비전학 (Arcana)</span><span class="skill-bonus">-1</span></div>
-                <div class="skill-row"><div class="prof-dot" onclick="this.classList.toggle('active')"></div><span class="skill-mod">근력</span><span class="skill-name">운동 (Athletics)</span><span class="skill-bonus">+2</span></div>
-            </div>
-            <div style="text-align: center; margin-top: 15px; font-size: 0.8em; color: #cc3333;">기술 (SKILLS)</div>
+                <div class="skill-row"><div class="prof-dot" onclick="this.classList.toggle('active')"></div><span class="skill-mod">민첩</span><span class="skill-name">곡예</span><span class="skill-bonus">+3</span></div>
+                <div class="skill-row"><div class="prof-dot" onclick="this.classList.toggle('active')"></div><span class="skill-mod">지혜</span><span class="skill-name">동물 조련</span><span class="skill-bonus">+0</span></div>
+                <div class="skill-row"><div class="prof-dot" onclick="this.classList.toggle('active')"></div><span class="skill-mod">지능</span><span class="skill-name">비전학</span><span class="skill-bonus">-1</span></div>
+                <div class="skill-row"><div class="prof-dot" onclick="this.classList.toggle('active')"></div><span class="skill-mod">근력</span><span class="skill-name">운동</span><span class="skill-bonus">+2</span></div>
+                </div>
+            <div style="text-align: center; margin-top: 15px; font-size: 0.8em; color: #cc3333;">SKILLS</div>
         </div>
 
-        <div class="box">
-            <h3>추가 내용 영역</h3>
-            <p>여기에 주문, 특징, 혹은 인벤토리 등을 배치하세요.</p>
+        <div>
+            <div class="box">
+                <div class="stats-row">
+                    <div class="stat-container"><div class="label">힘</div><input type="number" class="stat-input" data-stat="str" value="10" oninput="saveAndCalc(this)"><div class="stat-modifier">+0</div></div>
+                    <div class="stat-container"><div class="label">민첩</div><input type="number" class="stat-input" data-stat="dex" value="10" oninput="saveAndCalc(this)"><div class="stat-modifier">+0</div></div>
+                    </div>
+            </div>
+            <div class="box">
+                <h3>추가 정보</h3>
+                <p>여기에 다른 데이터를 넣으세요.</p>
+            </div>
         </div>
     </div>
 
     <script>
-        function downloadHTML() {
-            const htmlContent = document.documentElement.outerHTML;
-            const blob = new Blob([htmlContent], { type: 'text/html' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'my-character-sheet.html';
-            a.click();
-        }
+        function saveAndCalc(input) { localStorage.setItem(input.dataset.stat, input.value); calculateModifier(input); }
+        function calculateModifier(input) { let mod = Math.floor((parseInt(input.value) - 10) / 2); input.nextElementSibling.innerText = (mod >= 0 ? "+" : "") + mod; }
+        function downloadHTML() { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([document.documentElement.outerHTML], { type: 'text/html' })); a.download = 'my-character-sheet.html'; a.click(); }
     </script>
 </body>
 </html>
