@@ -93,20 +93,22 @@
 
 <script>
     function downloadHTML() {
-        // 현재 페이지의 전체 HTML을 가져옴
-        const htmlContent = document.documentElement.outerHTML;
-        
-        // Blob 객체 생성 (파일로 만들기 위한 데이터 형태)
-        const blob = new Blob([htmlContent], { type: 'text/html' });
-        
-        // 다운로드를 위한 링크 생성
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'my-character-sheet.html'; // 저장될 파일 이름
-        
-        // 클릭 이벤트 발생 후 링크 제거
-        a.click();
-        URL.revokeObjectURL(a.href);
-    }
+    // 1. 현재 화면에 입력된 모든 값을 각 태그의 value 속성에 반영
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(input => {
+        input.setAttribute('value', input.value);
+    });
+
+    // 2. 이제 업데이트된 HTML 소스 추출
+    const htmlContent = document.documentElement.outerHTML;
+    
+    // 3. 파일 생성 및 다운로드
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'my-character-sheet.html';
+    a.click();
+    URL.revokeObjectURL(a.href);
+}
 </script>
 </html>
