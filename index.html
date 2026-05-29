@@ -1,12 +1,66 @@
-<script>
-    function updateModifier(input) {
-        // (입력값 - 10) / 2를 해서 보정치를 계산하는 로직
-        let val = input.value;
-        let mod = Math.floor((val - 10) / 2);
-        input.nextElementSibling.innerText = (mod >= 0 ? "+" : "") + mod;
-    }
-</script>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>D&D 캐릭터 시트</title>
+    <style>
+        body { background-color: #1a1a1a; color: #e0e0e0; font-family: sans-serif; padding: 20px; }
+        .sheet-grid { display: grid; grid-template-columns: 200px 1fr; gap: 20px; max-width: 900px; margin: auto; }
+        
+        /* 기존 박스 디자인 유지 */
+        .box { border: 1px solid #7a0000; background: #252525; padding: 15px; border-radius: 4px; }
+        
+        /* 능력치 박스 스타일 */
+        .stat-container { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .label { color: #cc3333; font-size: 0.8em; text-transform: uppercase; font-weight: bold; }
+        
+        /* 입력창 디자인 */
+        .stat-input {
+            background: #1a1a1a;
+            color: #ffffff;
+            border: 1px solid #7a0000;
+            width: 50px;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            padding: 5px;
+            border-radius: 4px;
+        }
+        .stat-modifier { font-size: 1.2em; color: #ffffff; margin-top: 5px; }
+    </style>
+</head>
+<body>
 
-<!-- 위쪽 input 태그에 oninput="updateModifier(this)"를 추가하세요 -->
-<input type="number" class="stat-input" value="10" oninput="updateModifier(this)">
-<div class="stat-modifier">+0</div>
+    <div class="sheet-grid">
+        <!-- 능력치 영역 -->
+        <div class="box">
+            <div class="stat-container">
+                <div class="label">힘</div>
+                <!-- 입력 시 자동 계산 호출 -->
+                <input type="number" class="stat-input" value="10" oninput="calculateModifier(this)">
+                <div class="stat-modifier">+0</div>
+            </div>
+        </div>
+        
+        <!-- 설명 영역 -->
+        <div class="box">
+            <h3>사용 방법</h3>
+            <p>위의 숫자 칸에 능력치 점수를 입력하면, 아래 보정치가 자동으로 계산됩니다.</p>
+        </div>
+    </div>
+
+    <script>
+        function calculateModifier(input) {
+            // 능력치 보정치 계산 공식: floor((점수 - 10) / 2)
+            let score = parseInt(input.value);
+            if (isNaN(score)) return; // 숫자가 아니면 무시
+            
+            let mod = Math.floor((score - 10) / 2);
+            let displayMod = (mod >= 0 ? "+" : "") + mod;
+            
+            // 바로 아래 요소(div.stat-modifier)의 텍스트를 업데이트
+            input.nextElementSibling.innerText = displayMod;
+        }
+    </script>
+</body>
+</html>
