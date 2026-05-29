@@ -40,6 +40,26 @@
             border-radius: 4px;
         }
         .stat-modifier { font-size: 1.2em; color: #ffffff; margin-top: 5px; }
+        /* 기술 섹션 스타일 */
+#skills-container { display: flex; flex-direction: column; gap: 5px; }
+.skill-row { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    border-bottom: 1px solid #444; 
+    padding: 2px 0;
+}
+.prof-check { cursor: pointer; }
+.skill-mod { font-size: 0.75em; color: #888; width: 30px; }
+.skill-name { flex-grow: 1; font-size: 0.9em; }
+.skill-bonus-input { 
+    width: 35px; 
+    background: #1a1a1a; 
+    color: white; 
+    border: 1px solid #7a0000; 
+    text-align: center; 
+    padding: 2px;
+}
     </style>
 </head>
 <body>
@@ -58,15 +78,21 @@
             </div>
         </div>
     </div>
-    <div class="box" style="margin-top: 20px;">
-    <div id="skills-container">
-        <div class="skill-row"><div class="prof-dot" onclick="this.classList.toggle('active')"></div><span class="skill-mod">민첩</span><span class="skill-name">곡예 (Acrobatics)</span><span class="skill-bonus">+3</span></div>
-        <div class="skill-row"><div class="prof-dot" onclick="this.classList.toggle('active')"></div><span class="skill-mod">지혜</span><span class="skill-name">동물 조련 (Animal Handling)</span><span class="skill-bonus">+0</span></div>
-        <div class="skill-row"><div class="prof-dot" onclick="this.classList.toggle('active')"></div><span class="skill-mod">지능</span><span class="skill-name">비전학 (Arcana)</span><span class="skill-bonus">-1</span></div>
-        <div class="skill-row"><div class="prof-dot" onclick="this.classList.toggle('active')"></div><span class="skill-mod">근력</span><span class="skill-name">운동 (Athletics)</span><span class="skill-bonus">+2</span></div>
-        <div class="skill-row"><div class="prof-dot" onclick="this.classList.toggle('active')"></div><span class="skill-mod">매력</span><span class="skill-name">기만 (Deception)</span><span class="skill-bonus">+3</span></div>
+    <div class="box" style="margin-top: 20px; width: 300px;"> <div id="skills-container">
+        <div class="skill-row">
+            <input type="checkbox" class="prof-check">
+            <span class="skill-mod">DEX</span>
+            <span class="skill-name">Acrobatics (곡예)</span>
+            <input type="number" class="skill-bonus-input" value="3">
         </div>
-    <div style="text-align: center; margin-top: 15px; font-size: 0.8em; color: #cc3333; font-weight: bold;">기술 (SKILLS)</div>
+        <div class="skill-row">
+            <input type="checkbox" class="prof-check">
+            <span class="skill-mod">WIS</span>
+            <span class="skill-name">Animal Handling (동물 조련)</span>
+            <input type="number" class="skill-bonus-input" value="0">
+        </div>
+    </div>
+    <div style="text-align: center; margin-top: 15px; font-size: 0.8em; color: #cc3333; font-weight: bold;">SKILLS</div>
 </div>
 
     <script>
