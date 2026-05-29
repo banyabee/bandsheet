@@ -85,4 +85,28 @@
         }
     </script>
 </body>
+    <div class="box" style="margin-top: 20px; text-align: center;">
+    <button onclick="downloadHTML()" style="padding: 10px 20px; background: #7a0000; color: white; border: none; cursor: pointer; border-radius: 4px; font-weight: bold;">
+        현재 시트 HTML로 저장하기
+    </button>
+</div>
+
+<script>
+    function downloadHTML() {
+        // 현재 페이지의 전체 HTML을 가져옴
+        const htmlContent = document.documentElement.outerHTML;
+        
+        // Blob 객체 생성 (파일로 만들기 위한 데이터 형태)
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        
+        // 다운로드를 위한 링크 생성
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'my-character-sheet.html'; // 저장될 파일 이름
+        
+        // 클릭 이벤트 발생 후 링크 제거
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+</script>
 </html>
