@@ -9,36 +9,26 @@
         .save-btn { position: absolute; top: 20px; right: 20px; background: transparent; color: #cc3333; border: 1px solid #cc3333; padding: 5px 10px; cursor: pointer; border-radius: 3px; text-transform: uppercase; }
         .save-btn:hover { background: #cc3333; color: white; }
 
-        /* 중앙 정렬 컨테이너 */
         .sheet-grid { max-width: 900px; margin: auto; margin-top: 40px; }
         .box { border: 1px solid #7a0000; background: #252525; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
         
-        /* 능력치 */
         .stats-row { display: flex; justify-content: space-between; gap: 10px; }
         .stat-container { display: flex; flex-direction: column; align-items: center; gap: 5px; flex: 1; }
         .label { color: #cc3333; font-size: 0.8em; text-transform: uppercase; font-weight: bold; }
         .stat-input { background: #1a1a1a; color: #ffffff; border: 1px solid #7a0000; width: 80%; text-align: center; font-size: 1.5em; font-weight: bold; padding: 5px; border-radius: 4px; }
         .stat-modifier { font-size: 1.2em; color: #ffffff; margin-top: 5px; }
 
-        /* 기술 섹션 */
+        /* 수정된 기술 섹션 스타일 */
         #skills-container { display: flex; flex-direction: column; gap: 5px; }
         .skill-row { display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #444; padding: 5px 0; }
+        
         .prof-dot {
-            width: 12px;
-            height: 12px;
-            border: 1px solid #7a0000;
-            border-radius: 50%;
-            cursor: pointer;
-            background: #1a1a1a;
-            transition: background 0.2s;
+            width: 12px; height: 12px; border: 1px solid #7a0000; border-radius: 50%;
+            cursor: pointer; background: #1a1a1a; transition: background 0.2s;
         }
-        .prof-dot.active {
-            background: #e0e0e0; /* 점 색상 */
-            border-color: #e0e0e0;
-        }
-        .prof-dot.double {
-            border: 2px solid #e0e0e0;
-        }
+        .prof-dot.active { background: #e0e0e0; border-color: #e0e0e0; }
+        .prof-dot.double { border: 3px solid #e0e0e0; } /* 2중점 */
+        
         .skill-mod { font-size: 0.75em; color: #888; width: 30px; }
         .skill-name { flex-grow: 1; font-size: 0.9em; }
         .skill-bonus-input { width: 35px; background: #1a1a1a; color: white; border: 1px solid #7a0000; text-align: center; padding: 2px; }
@@ -62,17 +52,34 @@
 
         <div class="box" style="width: 300px;">
             <div id="skills-container">
-                <div class="skill-row">
-                    <input type="checkbox" class="prof-check">
-                    <span class="skill-mod">DEX</span>
-                    <span class="skill-name">Acrobatics (곡예)</span>
-                    <input type="number" class="skill-bonus-input" value="3">
-                </div>
-                <div class="skill-row">
-                    <input type="checkbox" class="prof-check">
-                    <span class="skill-mod">WIS</span>
-                    <span class="skill-name">Animal Handling (동물 조련)</span>
-                    <input type="number" class="skill-bonus-input" value="0">
-                </div>
+                <div class="skill-row"><div class="prof-dot" onclick="cycleDot(this)"></div><span class="skill-mod">DEX</span><span class="skill-name">Acrobatics (곡예)</span><input type="number" class="skill-bonus-input" value="3"></div>
+                <div class="skill-row"><div class="prof-dot" onclick="cycleDot(this)"></div><span class="skill-mod">WIS</span><span class="skill-name">Animal Handling (동물 조련)</span><input type="number" class="skill-bonus-input" value="0"></div>
             </div>
-            <div style="text-align: center; margin-top: 15px; font-size: 0.8em; color
+            <div style="text-align: center; margin-top: 15px; font-size: 0.8em; color: #cc3333; font-weight: bold;">SKILLS</div>
+        </div>
+    </div>
+
+    <script>
+        // 점 클릭 시 상태 순환 (빈 -> 1점 -> 2점 -> 빈)
+        function cycleDot(dot) {
+            if (!dot.classList.contains('active')) {
+                dot.classList.add('active');
+            } else if (!dot.classList.contains('double')) {
+                dot.classList.add('double');
+            } else {
+                dot.classList.remove('active', 'double');
+            }
+        }
+
+        // 기존 로직 유지
+        function saveAndCalc(input) { localStorage.setItem(input.dataset.stat, input.value); let mod = Math.floor((parseInt(input.value)-10)/2); input.nextElementSibling.innerText = (mod>=0?"+":"")+mod; }
+        
+        function downloadHTML() {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => input.setAttribute('value', input.value));
+            const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html' });
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'my-character-sheet.html'; a.click();
+        }
+    </script>
+</body>
+</html>
