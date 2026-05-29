@@ -5,7 +5,6 @@
     <title>D&D 캐릭터 시트</title>
     <style>
         body { background-color: #1a1a1a; color: #e0e0e0; font-family: sans-serif; padding: 20px; }
-        
         .save-btn { position: absolute; top: 20px; right: 20px; background: transparent; color: #cc3333; border: 1px solid #cc3333; padding: 5px 10px; cursor: pointer; border-radius: 3px; text-transform: uppercase; }
         .save-btn:hover { background: #cc3333; color: white; }
 
@@ -18,16 +17,22 @@
         .stat-input { background: #1a1a1a; color: #ffffff; border: 1px solid #7a0000; width: 80%; text-align: center; font-size: 1.5em; font-weight: bold; padding: 5px; border-radius: 4px; }
         .stat-modifier { font-size: 1.2em; color: #ffffff; margin-top: 5px; }
 
-        /* 수정된 기술 섹션 스타일 */
-        #skills-container { display: flex; flex-direction: column; gap: 5px; }
+        /* 토글 아이콘 스타일 */
+        #skills-container { display: flex; flex-direction: column; gap: 8px; }
         .skill-row { display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #444; padding: 5px 0; }
         
-        .prof-dot {
-            width: 12px; height: 12px; border: 1px solid #7a0000; border-radius: 50%;
-            cursor: pointer; background: #1a1a1a; transition: background 0.2s;
+        .prof-icon {
+            width: 16px; height: 16px;
+            background: #555;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 50%; /* 초기값: 원형 */
         }
-        .prof-dot.active { background: #e0e0e0; border-color: #e0e0e0; }
-        .prof-dot.double { border: 3px solid #e0e0e0; } /* 2중점 */
+        .prof-icon.is-star {
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            border-radius: 0; /* 별 모양일 땐 원형 초기화 */
+        }
+        .prof-icon.active { background: #e0e0e0; }
         
         .skill-mod { font-size: 0.75em; color: #888; width: 30px; }
         .skill-name { flex-grow: 1; font-size: 0.9em; }
@@ -52,35 +57,27 @@
 
         <div class="box" style="width: 300px;">
             <div id="skills-container">
-                <div class="skill-row"><div class="prof-dot" onclick="cycleDot(this)"></div><span class="skill-mod">DEX</span><span class="skill-name">Acrobatics (곡예)</span><input type="number" class="skill-bonus-input" value="3"></div>
-                <div class="skill-row"><div class="prof-dot" onclick="cycleDot(this)"></div><span class="skill-mod">WIS</span><span class="skill-name">Animal Handling (동물 조련)</span><input type="number" class="skill-bonus-input" value="0"></div>
+                <div class="skill-row"><div class="prof-icon" onclick="toggleIcon(this)"></div><span class="skill-mod">DEX</span><span class="skill-name">Acrobatics (곡예)</span><input type="number" class="skill-bonus-input" value="3"></div>
+                <div class="skill-row"><div class="prof-icon" onclick="toggleIcon(this)"></div><span class="skill-mod">WIS</span><span class="skill-name">Animal Handling (동물 조련)</span><input type="number" class="skill-bonus-input" value="0"></div>
             </div>
             <div style="text-align: center; margin-top: 15px; font-size: 0.8em; color: #cc3333; font-weight: bold;">SKILLS</div>
         </div>
     </div>
 
     <script>
-        // 점 클릭 시 상태 순환 (빈 -> 1점 -> 2점 -> 빈)
-        function cycleStar(star) {
-            if (!star.classList.contains('active') && !star.classList.contains('double')) {
-                star.classList.add('active');
-            } else if (star.classList.contains('active')) {
-                star.classList.remove('active');
-                star.classList.add('double');
+        // 클릭할 때마다 상태와 모양 변경
+        function toggleIcon(el) {
+            if (!el.classList.contains('active')) {
+                el.classList.add('active'); // 원형 채우기
+            } else if (!el.classList.contains('is-star')) {
+                el.classList.add('is-star'); // 별 모양으로 변경
             } else {
-                star.classList.remove('double');
+                el.classList.remove('active', 'is-star'); // 초기화
             }
         }
 
-        // 기존 로직 유지
         function saveAndCalc(input) { localStorage.setItem(input.dataset.stat, input.value); let mod = Math.floor((parseInt(input.value)-10)/2); input.nextElementSibling.innerText = (mod>=0?"+":"")+mod; }
-        
-        function downloadHTML() {
-            const inputs = document.querySelectorAll('input');
-            inputs.forEach(input => input.setAttribute('value', input.value));
-            const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html' });
-            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'my-character-sheet.html'; a.click();
-        }
+        function downloadHTML() { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([document.documentElement.outerHTML], { type: 'text/html' })); a.download = 'sheet.html'; a.click(); }
     </script>
 </body>
 </html>
