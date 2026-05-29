@@ -61,13 +61,14 @@
 
     <script>
         // 점 클릭 시 상태 순환 (빈 -> 1점 -> 2점 -> 빈)
-        function cycleDot(dot) {
-            if (!dot.classList.contains('active')) {
-                dot.classList.add('active');
-            } else if (!dot.classList.contains('double')) {
-                dot.classList.add('double');
+        function cycleStar(star) {
+            if (!star.classList.contains('active') && !star.classList.contains('double')) {
+                star.classList.add('active');
+            } else if (star.classList.contains('active')) {
+                star.classList.remove('active');
+                star.classList.add('double');
             } else {
-                dot.classList.remove('active', 'double');
+                star.classList.remove('double');
             }
         }
 
