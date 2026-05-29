@@ -6,19 +6,28 @@
     <style>
         body { background-color: #1a1a1a; color: #e0e0e0; font-family: sans-serif; padding: 20px; }
         
-        /* 전체 레이아웃 */
-        .sheet-grid { max-width: 900px; margin: auto; }
-        
-        /* 박스 디자인 */
+        /* 저장 버튼 스타일 (우측 상단) */
+        .save-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            color: #cc3333;
+            border: 1px solid #cc3333;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 0.8em;
+            border-radius: 3px;
+            text-transform: uppercase;
+        }
+        .save-btn:hover { background: #cc3333; color: white; }
+
+        .sheet-grid { max-width: 900px; margin: auto; margin-top: 40px; }
         .box { border: 1px solid #7a0000; background: #252525; padding: 15px; border-radius: 4px; }
-        
-        /* 능력치들을 가로로 배치 */
         .stats-row { display: flex; justify-content: space-between; gap: 10px; }
         .stat-container { display: flex; flex-direction: column; align-items: center; gap: 5px; flex: 1; }
-        
         .label { color: #cc3333; font-size: 0.8em; text-transform: uppercase; font-weight: bold; }
         
-        /* 입력창 디자인 */
         .stat-input {
             background: #1a1a1a;
             color: #ffffff;
@@ -35,80 +44,60 @@
 </head>
 <body>
 
+    <button class="save-btn" onclick="downloadHTML()">저장</button>
+
     <div class="sheet-grid">
         <div class="box">
-            <div class="stats-row">
-                <!-- 능력치 6개 반복 -->
-                <div class="stat-container">
-                    <div class="label">힘</div>
-                    <input type="number" class="stat-input" value="10" oninput="calculateModifier(this)">
-                    <div class="stat-modifier">+0</div>
-                </div>
-                <div class="stat-container">
-                    <div class="label">민첩</div>
-                    <input type="number" class="stat-input" value="10" oninput="calculateModifier(this)">
-                    <div class="stat-modifier">+0</div>
-                </div>
-                <div class="stat-container">
-                    <div class="label">건강</div>
-                    <input type="number" class="stat-input" value="10" oninput="calculateModifier(this)">
-                    <div class="stat-modifier">+0</div>
-                </div>
-                <div class="stat-container">
-                    <div class="label">지능</div>
-                    <input type="number" class="stat-input" value="10" oninput="calculateModifier(this)">
-                    <div class="stat-modifier">+0</div>
-                </div>
-                <div class="stat-container">
-                    <div class="label">지혜</div>
-                    <input type="number" class="stat-input" value="10" oninput="calculateModifier(this)">
-                    <div class="stat-modifier">+0</div>
-                </div>
-                <div class="stat-container">
-                    <div class="label">매력</div>
-                    <input type="number" class="stat-input" value="10" oninput="calculateModifier(this)">
-                    <div class="stat-modifier">+0</div>
-                </div>
+            <div class="stats-row" id="stats-container">
+                <div class="stat-container"><div class="label">힘</div><input type="number" class="stat-input" data-stat="str" value="10" oninput="saveAndCalc(this)"><div class="stat-modifier">+0</div></div>
+                <div class="stat-container"><div class="label">민첩</div><input type="number" class="stat-input" data-stat="dex" value="10" oninput="saveAndCalc(this)"><div class="stat-modifier">+0</div></div>
+                <div class="stat-container"><div class="label">건강</div><input type="number" class="stat-input" data-stat="con" value="10" oninput="saveAndCalc(this)"><div class="stat-modifier">+0</div></div>
+                <div class="stat-container"><div class="label">지능</div><input type="number" class="stat-input" data-stat="int" value="10" oninput="saveAndCalc(this)"><div class="stat-modifier">+0</div></div>
+                <div class="stat-container"><div class="label">지혜</div><input type="number" class="stat-input" data-stat="wis" value="10" oninput="saveAndCalc(this)"><div class="stat-modifier">+0</div></div>
+                <div class="stat-container"><div class="label">매력</div><input type="number" class="stat-input" data-stat="cha" value="10" oninput="saveAndCalc(this)"><div class="stat-modifier">+0</div></div>
             </div>
         </div>
     </div>
 
     <script>
+        // 페이지 로드 시 저장된 데이터 불러오기
+        window.onload = () => {
+            document.querySelectorAll('.stat-input').forEach(input => {
+                let savedValue = localStorage.getItem(input.dataset.stat);
+                if (savedValue) {
+                    input.value = savedValue;
+                    calculateModifier(input);
+                }
+            });
+        };
+
+        // 값 변경 시 자동 저장 및 계산
+        function saveAndCalc(input) {
+            localStorage.setItem(input.dataset.stat, input.value);
+            calculateModifier(input);
+        }
+
+        // 보정치 계산
         function calculateModifier(input) {
-            let score = parseInt(input.value);
-            if (isNaN(score)) return; 
-            
+            let score = parseInt(input.value) || 0;
             let mod = Math.floor((score - 10) / 2);
             let displayMod = (mod >= 0 ? "+" : "") + mod;
-            
             input.nextElementSibling.innerText = displayMod;
+        }
+
+        // HTML로 다운로드
+        function downloadHTML() {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => input.setAttribute('value', input.value));
+            
+            const htmlContent = document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'my-character-sheet.html';
+            a.click();
+            URL.revokeObjectURL(a.href);
         }
     </script>
 </body>
-    <div class="box" style="margin-top: 20px; text-align: center;">
-    <button onclick="downloadHTML()" style="padding: 10px 20px; background: #7a0000; color: white; border: none; cursor: pointer; border-radius: 4px; font-weight: bold;">
-        현재 시트 HTML로 저장하기
-    </button>
-</div>
-
-<script>
-    function downloadHTML() {
-    // 1. 현재 화면에 입력된 모든 값을 각 태그의 value 속성에 반영
-    const inputs = document.querySelectorAll('input');
-    inputs.forEach(input => {
-        input.setAttribute('value', input.value);
-    });
-
-    // 2. 이제 업데이트된 HTML 소스 추출
-    const htmlContent = document.documentElement.outerHTML;
-    
-    // 3. 파일 생성 및 다운로드
-    const blob = new Blob([htmlContent], { type: 'text/html' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'my-character-sheet.html';
-    a.click();
-    URL.revokeObjectURL(a.href);
-}
-</script>
 </html>
