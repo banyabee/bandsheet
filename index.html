@@ -23,7 +23,22 @@
         /* 기술 섹션 */
         #skills-container { display: flex; flex-direction: column; gap: 5px; }
         .skill-row { display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #444; padding: 5px 0; }
-        .prof-check { cursor: pointer; }
+        .prof-dot {
+            width: 12px;
+            height: 12px;
+            border: 1px solid #7a0000;
+            border-radius: 50%;
+            cursor: pointer;
+            background: #1a1a1a;
+            transition: background 0.2s;
+        }
+        .prof-dot.active {
+            background: #e0e0e0; /* 점 색상 */
+            border-color: #e0e0e0;
+        }
+        .prof-dot.double {
+            border: 2px solid #e0e0e0;
+        }
         .skill-mod { font-size: 0.75em; color: #888; width: 30px; }
         .skill-name { flex-grow: 1; font-size: 0.9em; }
         .skill-bonus-input { width: 35px; background: #1a1a1a; color: white; border: 1px solid #7a0000; text-align: center; padding: 2px; }
