@@ -2,24 +2,38 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>나의 D&D 캐릭터 시트</title>
     <style>
-        body { background-color: #1a1a1a; color: white; font-family: sans-serif; padding: 20px; }
-        .sheet-container { display: grid; grid-template-columns: 200px 1fr; gap: 20px; max-width: 900px; margin: auto; }
-        .box { border: 1px solid #444; background: #2a2a2a; padding: 15px; border-radius: 5px; }
-        .stat { font-size: 2em; font-weight: bold; text-align: center; color: #ffcc00; }
-        .label { font-size: 0.8em; text-transform: uppercase; color: #aaa; text-align: center; }
+        body { background-color: #1a1a1a; color: #e0e0e0; font-family: sans-serif; padding: 20px; }
+        .sheet-grid { display: grid; grid-template-columns: 200px 250px 1fr; gap: 15px; max-width: 1200px; margin: auto; }
+        .box { border: 1px solid #7a0000; background: #252525; padding: 10px; border-radius: 4px; }
+        .stat-box { text-align: center; border: 1px solid #7a0000; padding: 10px; margin: 5px; }
+        .stat-value { font-size: 1.5em; color: #fff; font-weight: bold; }
+        .label { color: #cc3333; font-size: 0.7em; text-transform: uppercase; }
     </style>
 </head>
 <body>
-    <div class="sheet-container">
+    <div class="sheet-grid">
+        <!-- 좌측: 능력치 영역 -->
         <div class="box">
-            <div class="label">STR</div>
-            <div class="stat">16 (+3)</div>
+            <div class="stat-box">
+                <div class="label">힘</div>
+                <div class="stat-value">+2</div>
+                <div>14</div>
+            </div>
+            <!-- 다른 능력치들도 이런 식으로 추가 -->
         </div>
+        
+        <!-- 중앙: 기술 영역 -->
         <div class="box">
-            <h1>캐릭터 이름</h1>
-            <p>직업: 파이터 / 종족: 휴먼</p>
+            <div class="label">기술</div>
+            <p>● 곡예 +3</p>
+            <p>○ 동물 관리 +0</p>
+        </div>
+
+        <!-- 우측: 행동 및 주문 영역 -->
+        <div class="box">
+            <div class="label">행위 / 전투 행동</div>
+            <p>비무장 파업: +4 공격, 1+힘 수정치 피해</p>
         </div>
     </div>
 </body>
